@@ -10,7 +10,7 @@ body{
 #container {
     background: linear-gradient(to right, steelblue, #304855);
     height: 60vh;
-    width: 22vw;
+    width: 380px;
     margin: 10% auto;
     box-shadow: 3px 3px 27px grey, 4px 1px 7px white;
     border-radius: 5px;
