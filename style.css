@@ -1,15 +1,19 @@
+body{
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Pure-mathematics-formul%C3%A6-blackboard.jpg/1280px-Pure-mathematics-formul%C3%A6-blackboard.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 @font-face{
     font-family: calculator;
     src:url("digital-7 (mono).ttf");
 }
 #container {
+    background: linear-gradient(to right, steelblue, #304855);
     height: 60vh;
     width: 22vw;
-    background-color: #8bffcd;
     margin: 10% auto;
-    box-shadow: 3px 3px grey;
+    box-shadow: 3px 3px 27px grey, 4px 1px 7px white;
     border-radius: 5px;
-    border: 3px solid gray;
 }
 #input_container{
     width: 100%;
@@ -31,21 +35,21 @@
     width: 80%;
     border-radius: 10px;
     margin: 10%;
-    background-color: #5bb68f;
+    background: linear-gradient(to right, #bddffa, black);
 }
 .row{
     height:20%;
 }
 p{
-    margin: 30% 0 0 0;
+    position: relative;
     font-size: 2vmin;
     font-family: Arial, Helvetica, sans-serif
 }
 .button:hover{
-    background-color: #fefafe;
+    cursor: pointer;
 }
 p:hover{
-    cursor: default;
+    cursor: pointer;
 }
 .button:active{
     box-shadow: none;
@@ -59,4 +63,30 @@ p:hover{
     box-shadow: 2px 2px grey;
     float: left;
     background-color: blanchedalmond;
+}
+@media only screen and (max-device-width:500px){
+    #container{
+        width: 100vw;
+        height: 100vh;
+    }
+    p{
+        position: relative;
+        font-size: 5vmin;
+    }
+    #input{
+        font-size: 12vmin;
+    }
+}
+@media only screen and (min-device-width: 501px) and (max-device-width: 728px){
+    #container{
+        width: 80vw;
+        height: 80vh;
+    }
+    p{
+        position: relative;
+        font-size: 5vmin;
+    }
+    #input{
+        font-size: 7vmin;
+    }
 }

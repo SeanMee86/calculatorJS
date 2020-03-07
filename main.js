@@ -50,6 +50,8 @@ $(document).ready(function(){
 
     function numberClick(){
         inputArray.push($(this).find('p').text());
+        console.dir(this);
+        console.dir(document.getElementById('input'));
         $('#input').val(inputArray.join(''));
     }
 
