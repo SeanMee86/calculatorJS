@@ -1,16 +1,126 @@
+
+
 const Calculator = function(){
     this.inputArray = [];
     this.mathArray = [];
     this.cacheArray = [];
 
+    // Disable Keyboard Input
     this.disableKeyPress = () => {
         document
             .getElementById('input')
             .addEventListener('keypress', (ev => ev.preventDefault()))
     };
 
+    // Combine Input Array To Show In Calculator Input Field
+    this.combineInputArray = () => {
+        document
+            .getElementById('input')
+            .setAttribute('value', this.inputArray.join(''));
+    };
+
+    // Define Button Click Functionalities
+    this.numClick = (e) => {
+        this.inputArray.push(e.target.innerText);
+        this.combineInputArray();
+    };
+
+    this.decimalClick = (e) => {
+        if (this.inputArray
+            .join()
+            .toString()
+            .split('')
+            .includes('.')){
+            return false;
+        }
+        else {
+            this.inputArray.push(e.target.innerText);
+            this.combineInputArray()
+        }
+    };
+
+    this.operatorClick = (e) => {
+        if(isNaN(this.inputArray[this.inputArray.length-1]) && this.inputArray[this.inputArray.length-1] !== '.'){
+            this.mathArray.pop();
+            this.mathArray.push(e.target.innerText);
+            return;
+        }
+        if(this.mathArray.length === 2){
+            this.mathArray.push(this.inputArray.join(''));
+            this.showMath();
+            this.mathArray.push(this.inputArray[0]);
+            this.mathArray.push(e.target.innerText);
+            this.inputArray = [];
+        }
+        else {
+            this.mathArray.push(this.inputArray.join(''));
+            this.mathArray.push(e.target.innerText);
+            this.inputArray = [];
+        }
+    };
+
+    this.equalsClick = () => {
+        this.mathArray.push(this.inputArray.join(''));
+        if(this.mathArray.length === 3) {
+            this.showMath()
+        }
+        else if(this.inputArray.length === 1){
+            this.mathArray.push(this.cacheArray[0]);
+            this.mathArray.push(this.cacheArray[1]);
+            this.showMath();
+        }
+    };
+
+    this.clearClick = () => {
+        this.inputArray.pop();
+        this.combineInputArray();
+    };
+
+    this.allClearClick = () => {
+        document.getElementById('input')
+            .setAttribute('value', '');
+        this.inputArray = [];
+        this.mathArray = [];
+    };
+
+    // Handle Button Clicks
+    this.numClickHandler = () => {
+        Array
+            .from(document.getElementsByClassName('number'))
+            .forEach(num => {num.addEventListener('click', this.numClick)});
+    };
+
+    this.decimalClickHandler = () => {
+        document
+            .getElementById('decimal')
+            .addEventListener('click', this.decimalClick)
+    };
+
+    this.operatorClickHandler = () => {
+        Array
+            .from(document.getElementsByClassName('operator'))
+            .forEach(op => {op.addEventListener('click', this.operatorClick)})
+    };
+
+    this.equalsClickHandler = () => {
+        document.getElementById('equals')
+            .addEventListener('click', this.equalsClick)
+    };
+
+    this.clearClickHandler = () => {
+        document.getElementById('clear')
+            .addEventListener('click', this.clearClick)
+    };
+
+    this.allClearClickHandler = () => {
+        document.getElementById('allClear')
+            .addEventListener('click', this.allClearClick)
+    };
+
+    // Perform The Arithmetic Given To Us By Our Math Array.
     this.arithmetic = (num1,num2,operator) => {
         let result;
+
         switch(operator){
             case "+":
                 result = num1 + num2;
@@ -25,11 +135,12 @@ const Calculator = function(){
                 result = num1/num2;
                 break;
             default:
-                console.error("invalid");
+                console.error("Invalid Operator Passed!");
         }
-        if(result === 1/0){
-            result = "ERROR";
-        }
+
+        result === 1/0 ? result = "ERROR" : null;
+
+        // Cache Our Result And Reset Input and Math Arrays
         this.cacheArray = [operator,num2];
         this.inputArray = [];
         this.mathArray = [];
@@ -37,159 +148,30 @@ const Calculator = function(){
         return this.inputArray[0];
     };
 
-    this.numClick = function(){
-        console.log(this.inputArray);
+    // Show The Returned Value In Our Calculator's Input Field
+    this.showMath = () => {
         document
             .getElementById('input')
-            .setAttribute('value', inputArray.join(''));
+            .setAttribute(
+                'value',
+                this.arithmetic(parseFloat(this.mathArray[0]), parseFloat(this.mathArray[2]), this.mathArray[1])
+            );
     };
 
-    this.addNumClick = function(){
-        Array
-            .from(document.getElementsByClassName('number'))
-            .forEach(num => {num.addEventListener('click', this.numClick.bind(this))});
-
-    };
-
+    // Instantiate Event Handlers
     this.addEventHandlers = () => {
-        this.addNumClick();
-        this.disableKeyPress();
+        this.numClickHandler();
+        this.decimalClickHandler();
+        this.operatorClickHandler();
+        this.equalsClickHandler();
+        this.clearClickHandler();
+        this.allClearClickHandler();
     };
 };
 
 const calculator = new Calculator();
 
-var inputArray = [];
-var mathArray = [];
-var cacheArray = [];
-
-//**********************************************************************************************************************
-
-$(document).ready(function(){
-
+window.onload = function() {
     calculator.addEventHandlers();
-
-    function disableKeyPress() {
-        $('#input').on('keypress', function () {
-            return false;
-        });
-    }
-
-//**********************************************************************************************************************
-
-    function do_math(num1,num2,operator){
-        num1 = parseFloat(mathArray[0]);
-        operator = mathArray[1];
-        num2 = parseFloat(mathArray[2]);
-        switch(operator){
-            case "+":
-                var result = num1 + num2;
-                break;
-            case "-":
-                result = num1 - num2;
-                break;
-            case "*" || "x" || "X":
-                result = num1 * num2;
-                break;
-            case "/":
-                result = num1/num2;
-                break;
-            default:
-                console.error("invalid");
-        }
-        if(result === 1/0){
-            result = "ERROR";
-        }
-        cacheArray = [operator,num2];
-        inputArray = [];
-        mathArray = [];
-        inputArray.push(result);
-        return inputArray[0];
-    }
-
-//**********************************************************************************************************************
-
-    //BEGIN EVENT HANDLERS
-
-    // function numberClick(){
-    //     inputArray.push($(this).find('p').text());
-    //     $('#input').val(inputArray.join(''));
-    // }
-
-    function decimalClick(){
-        if (inputArray
-            .join()
-            .toString()
-            .split('')
-            .includes('.')){
-            return false;
-        }
-        else {
-            inputArray.push($(this).find('p').text());
-            $('#input').val(inputArray.join(''));
-        }
-    }
-
-    function operatorClick(){
-        if(isNaN(inputArray[inputArray.length-1]) && inputArray[inputArray.length-1] !== '.'){
-            mathArray.pop();
-            mathArray.push($(this).find('p').text());
-            return;
-        }
-        if(mathArray.length===2){
-            mathArray.push(inputArray.join(''));
-            $('#input').val(do_math());
-            mathArray.push(inputArray[0]);
-            mathArray.push($(this).find('p').text());
-            inputArray = [];
-        }
-        else {
-            mathArray.push(inputArray.join(''));
-            mathArray.push($(this).find('p').text());
-            inputArray = [];
-        }
-    }
-
-    function equalsClick(){
-        mathArray.push(inputArray.join(''));
-        if(mathArray.length === 3) {
-            $('#input').val(do_math());
-        }
-        else if(inputArray.length ===1){
-            mathArray.push(cacheArray[0]);
-            mathArray.push(cacheArray[1]);
-            $('#input').val(do_math());
-        }
-        else{
-
-        }
-    }
-
-    function clearClick(){
-        inputArray.pop();
-        $('#input').val(inputArray.join(''));
-    }
-
-    function allClearClick(){
-        $('#input').val("");
-        inputArray = [];
-        mathArray = [];
-    }
-
-    function clickHandler(){
-        $('.decimal').click(decimalClick);
-        $('.clear').click(clearClick);
-        $('.allClear').click(allClearClick);
-        $('.number').click(numberClick);
-        $('.operator').click(operatorClick);
-        $('.equals').click(equalsClick);
-    }
-
-    //END EVENT HANDLERS
-
-//**********************************************************************************************************************
-
-    // clickHandler();
-    // disableKeyPress();
-    // calculator.disableKeyPress()
-});
+    calculator.disableKeyPress();
+};
