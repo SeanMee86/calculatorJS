@@ -1,3 +1,63 @@
+const Calculator = function(){
+    this.inputArray = [];
+    this.mathArray = [];
+    this.cacheArray = [];
+
+    this.disableKeyPress = () => {
+        document
+            .getElementById('input')
+            .addEventListener('keypress', (ev => ev.preventDefault()))
+    };
+
+    this.arithmetic = (num1,num2,operator) => {
+        let result;
+        switch(operator){
+            case "+":
+                result = num1 + num2;
+                break;
+            case "-":
+                result = num1 - num2;
+                break;
+            case "*" || "x" || "X":
+                result = num1 * num2;
+                break;
+            case "/":
+                result = num1/num2;
+                break;
+            default:
+                console.error("invalid");
+        }
+        if(result === 1/0){
+            result = "ERROR";
+        }
+        this.cacheArray = [operator,num2];
+        this.inputArray = [];
+        this.mathArray = [];
+        this.inputArray.push(result);
+        return this.inputArray[0];
+    };
+
+    this.numClick = function(){
+        console.log(this.inputArray);
+        document
+            .getElementById('input')
+            .setAttribute('value', inputArray.join(''));
+    };
+
+    this.addNumClick = function(){
+        Array
+            .from(document.getElementsByClassName('number'))
+            .forEach(num => {num.addEventListener('click', this.numClick.bind(this))});
+
+    };
+
+    this.addEventHandlers = () => {
+        this.addNumClick();
+        this.disableKeyPress();
+    };
+};
+
+const calculator = new Calculator();
 
 var inputArray = [];
 var mathArray = [];
@@ -6,6 +66,9 @@ var cacheArray = [];
 //**********************************************************************************************************************
 
 $(document).ready(function(){
+
+    calculator.addEventHandlers();
+
     function disableKeyPress() {
         $('#input').on('keypress', function () {
             return false;
@@ -48,12 +111,10 @@ $(document).ready(function(){
 
     //BEGIN EVENT HANDLERS
 
-    function numberClick(){
-        inputArray.push($(this).find('p').text());
-        console.dir(this);
-        console.dir(document.getElementById('input'));
-        $('#input').val(inputArray.join(''));
-    }
+    // function numberClick(){
+    //     inputArray.push($(this).find('p').text());
+    //     $('#input').val(inputArray.join(''));
+    // }
 
     function decimalClick(){
         if (inputArray
@@ -128,6 +189,7 @@ $(document).ready(function(){
 
 //**********************************************************************************************************************
 
-    clickHandler();
-    disableKeyPress();
+    // clickHandler();
+    // disableKeyPress();
+    // calculator.disableKeyPress()
 });
