@@ -1,5 +1,3 @@
-
-
 const Calculator = function(){
     this.inputArray = [];
     this.mathArray = [];
